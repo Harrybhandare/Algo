@@ -239,3 +239,436 @@ if __name__ == "__main__":
     print("Stable matching:")
     for m, w in sorted(matching.items()):
         print(f"  {m} -- {w}")
+
+
+
+
+
+
+
+#--------------------------STABLE MATCHING----------------------------
+
+"""
+men=['A','B','C']
+women=['q','r','s']
+
+men_preference={'A':['q','s','r'],
+                'B':['q','r','s'],
+                'C':['s','r','q']}
+women_preference={'q':['C','B','A'],
+                  'r':['A','C','B'],
+                  's':['A','B','C']}
+
+matched_men={}
+matched_women={}
+free_men=men.copy() # ['A','B','C']
+
+while free_men:
+    m=free_men.pop(0)  # 'A'
+    for w in men_preference[m]: #['q','s','r']
+       if w not in matched_women:
+           matched_women[w]=m
+           matched_men[m]=w
+           break
+       else:
+           current=matched_women[w]
+           cur=women_preference[w].index(current)
+           new=women_preference[w].index(m)
+           if new < cur:
+             matched_women[w]=m
+             matched_men[m]=w
+             matched_men.pop(current)
+             free_men.append(current)
+             break
+
+
+for m in matched_men:
+ print(m,"---->",matched_men[m])  """
+
+
+
+
+
+
+
+
+
+
+"""men=["Xavier","Yancey","Zeus"]
+women=["Amy","Bertha","Clare"]
+
+men_preference={"Xavier":["Amy","Bertha","Clare"],
+                "Yancey":["Bertha","Amy","Clare"],
+                "Zeus":["Amy","Bertha","Clare"]}
+women_preference={"Amy":["Yancey","Xavier","Zeus"],
+                  "Bertha":["Xavier","Yancey","Zeus"],
+                  "Clare":["Xavier","Yancey","Zeus"]}
+
+
+matched_men={}
+matched_women={}
+free_men=men.copy() #["Xavier","Yancey","Zeus"]
+while free_men:
+    m=free_men.pop(0)    # Xavier
+    for w in men_preference[m]: #["Amy","Bertha","Clare"]
+        print(m,"proposes to",w)
+        if w not in matched_women:
+           print(w,"pair with",m,"because she is free")
+           matched_women[w]=m
+           matched_men[m]=w
+           break
+
+        else:
+           current=matched_women[w]
+           cur=women_preference[w].index(current)
+           new=women_preference[w].index(m)
+           if new < cur:
+               print(w,"rejects",current,)
+               matched_women[w]=m
+               matched_men[m]=w
+               matched_men.pop(current)
+               free_men.append(current)
+               break
+           else:
+               print(w,"rejects",m,"because she likes her current match",current,"more.")
+               print(m,"remain free")
+
+
+for m in matched_men:
+    print(m,"---->",matched_men[m])"""
+
+
+
+
+
+
+
+
+
+
+#------------------------------GREEDY ALGORITHM-------------------------------------------------------------------------
+#-----------------------------1. ASSIGN COOKIES (O(n))------------------------------------------------------------------
+"""
+greed=[]
+s=[]
+n=int(input("Enter number of children : "))
+for i in range(n):
+    greed.append(int(input(f"Enter greed of {i+1} children :")))
+m=int(input("Enter number of cookies : "))
+for i in range(m):
+    s.append(int(input(f"Enter cookie size of {i+1} cookie :")))
+sorted_greed=sorted(greed)
+sorted_s=sorted(s)
+
+p=0
+for i in sorted_s:
+    if i >= sorted_greed[p]:
+        p+=1
+
+print(f"Number of satisfied children is {p}")
+"""
+#-----------------------------2. LEMONADE CHANGE (O(n))----------------------------------------------------------------
+"""
+bill=[]
+n=int(input("Enter number of customers : "))
+for i in range(n):
+    bill.append(int(input(f"Enter bill of {i+1} customer :")))
+
+sorted_bill=sorted(bill)
+
+five=0
+ten=0
+twenty=0
+flag = True
+for i in sorted_bill:
+    if i == 5:
+        five+=1
+    elif i == 10 and five != 0:
+        ten +=1
+        five -=1
+    elif i == 20:
+        if ten >= 1 and five != 0:
+           five -=1
+           ten -=1
+        elif ten == 0 and five >= 3:
+            five -=3
+        else:
+            flag = False
+    else:
+        flag = False
+        break
+if flag:
+    print("Satisfied Every Customer")
+else:
+    print("Not Satisfied Every Customer")
+
+"""
+
+
+
+#------------------------------- 3. SHORTEST JOB FIRST (O(nlogn))-------------------------------------------------------
+"""
+burst=[]
+n=int(input("Enter number of jobs : "))
+for i in range(n):
+  burst.append(int(input(f"Enter burst time of job no. {i+1} :")))
+
+sum=0
+sorted_burst=sorted(burst)
+for i in sorted_burst:
+    sum+=i
+print(f"Average burst time is {int(sum/n)}")
+"""
+
+#-------------------------------- 4. JUMP GAME (O(n))-------------------------------------------------------------------
+""""
+arr=[]
+n=int(input("Enter number of jumps : "))
+for i in range(n):
+    arr.append(int(input(f"Enter step size of jump no. {i+1} :")))
+
+MaxIndex=0
+for i in range(n):
+    if i <= MaxIndex:
+        MaxIndex=max(MaxIndex,i+arr[i])
+    else:
+        break
+
+if MaxIndex >= n-1:
+    print("Reached to the End")
+else:
+    print("Not Reached to the End")
+"""
+#--------------------------------- 5. JUMP GAME 2 (O(n^n)---------------------------------------------------------------
+"""
+def f(i, k):
+    if i >= n-1:
+        return k
+    else:
+        m = 9999
+        for j in range(1, arr[i]+1):
+            m = min(m, f(i+j,k+1))
+    return m
+
+
+arr=[]
+n=int(input("Enter number of jumps : "))
+for i in range(n):
+    arr.append(int(input(f"Enter step size of jump no. {i+1} :")))
+
+print(f"Minimum Number of jumps required :{f(0,0)}")
+
+"""
+
+#-------------------------------------- OPTIMIZATION--------------------------------------------------------------------
+
+"""
+
+def f(i, k):
+    if i >= n-1:
+        return k
+    else:
+        m = 9999
+        for j in range(1, arr[i]+1):
+            if F[i+j][k+1] != -1:
+                m = min(m, F[i+j][k+1])
+            else:
+                F[i+j][k+1] = f(i+j,k+1)
+                m = min(m, F[i + j][k + 1])
+    return m
+
+
+arr=[]
+n=int(input("Enter number of jumps : "))
+for i in range(n):
+    arr.append(int(input(f"Enter step size of jump no. {i+1} :")))
+
+F = [[-1 for i in range(n)] for j in range(n)]
+print(f"Minimum Number of jumps required :{f(0,0)}")
+
+"""
+
+
+
+#-------------------------------------- OPTIMIZATION USING RANGE O(n) --------------------------------------------------
+"""
+arr=[]
+n=int(input("Enter number of jumps : "))
+for i in range(n):
+    arr.append(int(input(f"Enter step size of jump no. {i+1} :")))
+
+
+r = 0
+l = 0
+jump = 0
+while r < n - 1:
+    jump += 1
+    x=l
+    l=r+1
+    for j in range(x, r + 1):
+        r = max(r, j + arr[j])
+
+print(f"Minimum Number of jumps required :{jump}")
+
+"""
+
+#-------------------------------------6. JOB SEQUENCING PROBLEM---------------------------------------------------------
+"""
+job=[]
+n=int(input("Enter number of jobs: "))
+for i in range(n):
+    id = int(input(f"Enter id of job no. {i+1} :"))
+    deadline = int(input(f"Enter deadline of job no. {i+1} :"))
+    profit = int(input(f"Enter profit of job no. {i+1} :"))
+    job.append((id, deadline, profit))
+
+job.sort(key=lambda x: x[2], reverse=True)
+
+slots = [-1]*(max(j[1] for j in job)+1)
+
+for i in job:
+    if slots[i[1]] == -1:
+        slots[i[1]]=i[2]
+    else:
+        x=i[1]
+        while x >=0 and slots[x] != -1:
+            x -=1
+        slots[x]=i[2]
+
+print(slots)
+"""
+#-----------------------------------------ROUGH-------------------------------------------------------------------------
+"""
+a=0
+x=[(1,2),(5,7),(4,6)]
+m=max(i[1] for i in x)
+print(m)
+"""
+#-------------------------------------7. N MEETING IN ONE ROOM----------------------------------------------------------
+"""
+n=int(input("Enter number of jobs : "))
+job=[]
+for i in range(n):
+    start = int(input(f"Enter start time of job no. {i+1} :"))
+    end = int(input(f"Enter end time of job no. {i+1} :"))
+    job.append((i+1,start,end))
+
+job.sort(key=lambda x: x[2])
+result=[]
+end=-1
+for i in job:
+    if i[1] >= end:
+        result.append(i)
+        end=i[2]
+
+for i in result:
+    print(f"{i[0]}: {i[1]}----->{i[2]}")
+
+"""
+
+#--------------------------------------8.NON-OVERLAPPING INTERVALS------------------------------------------------------
+"""
+n=int(input("Enter number of jobs : "))
+job=[]
+for i in range(n):
+    start = int(input(f"Enter start time of job no. {i+1} :"))
+    end = int(input(f"Enter end time of job no. {i+1} :"))
+    job.append((start,end))
+
+job.sort(key=lambda x: x[1])
+result=[]
+end=-1
+for i in job:
+    if i[0] >= end:
+        result.append(i)
+        end=i[1]
+
+print(f"Number of Non-Overlapping Jobs: {len(job)-len(result)}")
+"""
+#--------------------------------------9. INSERT INTERVALS--------------------------------------------------------------
+
+#-------------------------------------10. MINIMUM NUMBER OF PLATFORMS---------------------------------------------------
+arrival=[]
+departure=[]
+n=int(input("Enter number of train : "))
+for i in range(n):
+    arrival.append(int(input(f"Enter arrival time of train no. {i+1} :")))
+for i in range(n):
+    departure.append(int(input(f"Enter departure time of train no. {i+1} :")))
+
+sorted_departure=sorted(departure)
+p=0
+q=0
+count=0
+platform=-1
+while p <= n-1:
+    if arrival[p]<sorted_departure[q]:
+        count +=1
+        p +=1
+        platform = max(platform, count)
+    else:
+        count -=1
+        q +=1
+
+print(f"Minimum number of platform needed : {platform}")
+
+
+
+#----------------------------------- -11. FRACTIONAL KNAPSACK-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
